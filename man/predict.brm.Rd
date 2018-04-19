@@ -26,4 +26,3 @@ If x.new is supplied, a vector consisting of fitted probabilities px = P(y=1|x=x
 \description{
 Calculate fitted probabilities from a fitted binary regression model object.
 }
-

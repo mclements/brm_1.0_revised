@@ -4,16 +4,13 @@ max.likelihood = function(param, y, x, va, vb, alpha.start, beta.start, weights,
     
     startpars = c(alpha.start, beta.start)
     
-    if (param == "RR") 
-        getProbScalar = getProbScalarRR
-    if (param == "RD") 
-        getProbScalar = getProbScalarRD
+    getProb = if (param == "RR") getProbRR else getProbRD
     
     ## negative log likelihood function
     neg.log.likelihood = function(pars) {
         alpha = pars[1:pa]
         beta = pars[(pa + 1):(pa + pb)]
-        p0p1 = t(mapply(getProbScalar, va %*% alpha, vb %*% beta))
+        p0p1 = getProb(va %*% alpha, vb %*% beta)
         p0 = p0p1[, 1];   p1 = p0p1[, 2]
         
         return(-sum((1 - y[x == 0]) * log(1 - p0[x == 0]) * weights[x == 0] + 
@@ -23,7 +20,7 @@ max.likelihood = function(param, y, x, va, vb, alpha.start, beta.start, weights,
     }
     
     neg.log.likelihood.alpha = function(alpha){
-        p0p1  = t(mapply(getProbScalar,va%*%alpha, vb%*%beta))
+        p0p1  = getProb(va %*% alpha, vb %*% beta)
         p0    = p0p1[,1];  p1 = p0p1[,2]
         
         return(-sum((1-y[x==0])*log(1-p0[x==0])*weights[x==0] +
@@ -33,7 +30,7 @@ max.likelihood = function(param, y, x, va, vb, alpha.start, beta.start, weights,
     }
     
     neg.log.likelihood.beta = function(beta){
-        p0p1  = t(mapply(getProbScalar,va%*%alpha, vb%*%beta))
+        p0p1 = getProb(va %*% alpha, vb %*% beta)
         p0    = p0p1[,1];  p1 = p0p1[,2]
         
         return(-sum((1-y[x==0])*log(1-p0[x==0])*weights[x==0] +
@@ -45,21 +42,8 @@ max.likelihood = function(param, y, x, va, vb, alpha.start, beta.start, weights,
     
     ## Optimization 
 
-    Diff = function(x,y) sum((x-y)^2)/sum(x^2+thres)
-    alpha = alpha.start; beta = beta.start
-    diff = thres + 1; step = 0
-    while(diff > thres & step < max.step){
-        step = step + 1
-        opt1 = if (pa>1) stats::optim(alpha,neg.log.likelihood.alpha,control=list(maxit=max.step)) else stats::optim(alpha,neg.log.likelihood.alpha,control=list(maxit=max.step), method="Brent", lower=-20, upper=20)
-        diff1 = Diff(opt1$par,alpha)
-        alpha = opt1$par
-        opt2 = if (pb>1) stats::optim(beta,neg.log.likelihood.beta,control=list(maxit=max.step)) else stats::optim(beta,neg.log.likelihood.beta,control=list(maxit=max.step), method="Brent", lower=-20, upper=20)
-        diff  = max(diff1,Diff(opt2$par,beta))
-        beta = opt2$par
-    }
-    
-    opt = list(par = c(alpha,beta), convergence = (step < max.step), 
-               value = neg.log.likelihood(c(alpha,beta)))
+    opt = stats::optim(c(alpha.start,beta.start), neg.log.likelihood, control=list(reltol=thres)) # add hessian=TRUE?
+    opt$convergence = (opt$convergence == 0) # change cf. optim()
     
     return(opt)
 }

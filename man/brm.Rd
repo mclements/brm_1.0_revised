@@ -6,7 +6,7 @@
 \usage{
 brm(y, x, va, vb = NULL, param, est.method = "MLE", vc = NULL,
   optimal = TRUE, weights = NULL, subset = NULL, max.step = 1000,
-  thres = 1e-06, alpha.start = NULL, beta.start = NULL, message = FALSE)
+  thres = 1e-08, alpha.start = NULL, beta.start = NULL, message = FALSE)
 }
 \arguments{
 \item{y}{The response vector. Should only take values 0 or 1.}
@@ -97,11 +97,11 @@ v.1         = rep(1,n)       # intercept term
 v.2         = runif(n,-2,2) 
 v           = cbind(v.1,v.2)
 pscore.true = exp(v \%*\% gamma.true) / (1+exp(v \%*\% gamma.true))
-p0p1.true   = t(mapply(getProbScalarRR,v \%*\% alpha.true,v \%*\% beta.true)) 
-x           = mapply(rbinom,rep(1,n),rep(1,n),pscore.true)  
+p0p1.true   = getProbRR(v \%*\% alpha.true,v \%*\% beta.true)
+x           = rbinom(n, 1, pscore.true)  
 pA.true       = p0p1.true[,1]
 pA.true[x==1] = p0p1.true[x==1,2]
-y = mapply(rbinom,rep(1,n),rep(1,n),pA.true)
+y = rbinom(n, 1, pA.true)
 
 fit.mle = brm(y,x,v,v,'RR','MLE',v,TRUE)
 fit.drw = brm(y,x,v,v,'RR','DR',v,TRUE)
@@ -109,9 +109,6 @@ fit.dru = brm(y,x,v,v,'RR','DR',v,FALSE)
 
 fit.mle2 = brm(y,x,~v.2, ~v.2, 'RR','MLE', ~v.2,TRUE) # same as fit.mle
 
-}
-\author{
-Linbo Wang <linbowang@g.harvard.edu>, Thomas Richardson <thomasr@uw.edu>
 }
 \references{
 Thomas S. Richardson, James M. Robins and Linbo Wang. "On Modeling and Estimation for the Relative Risk and Risk Difference." Journal of the American Statistical Association: Theory and Methods (2016+).
@@ -123,4 +120,6 @@ Eric J. Tchetgen Tchetgen, James M. Robins and Andrea Rotnitzky. "On doubly robu
 
 \code{predict.blm} for obtaining fitted probabilities from \code{brm} fits.
 }
-
+\author{
+Linbo Wang <linbowang@g.harvard.edu>, Thomas Richardson <thomasr@uw.edu>
+}

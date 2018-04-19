@@ -51,3 +51,29 @@ getProbScalarRD = function(atanhrd, logop) {
     }
     return(c(p0, p1))
 } 
+
+## vectorised version
+getProbRD = function(atanhrd, logop) {
+    if(is.matrix(atanhrd) && ncol(atanhrd) == 2){
+        logop = atanhrd[,2]
+        atanhrd = atanhrd[,1]
+    } else if(is.na(logop) && length(atanhrd) == 2){
+        logop = atanhrd[2]
+        atanhrd = atanhrd[1]
+    }
+    p0 <- ifelse (logop > 350,
+                  ifelse(atanhrd < 0,
+                         1,
+                         1 - tanh(atanhrd)),
+                  ## not on boundary logop = 0; solving linear equations
+                  ifelse(same(logop, 0),
+                         0.5 * (1 - tanh(atanhrd)),
+                         (-(exp(logop) * (tanh(atanhrd) - 2) - tanh(atanhrd)) - sqrt((exp(logop) * (tanh(atanhrd) - 2) - tanh(atanhrd))^2 + 4 * exp(logop) * (1 - tanh(atanhrd)) * (1 - exp(logop))))/(2 * (exp(logop) - 1))))
+    p1 <- ifelse (logop > 350,
+                  ifelse(atanhrd < 0,
+                         1 + tanh(atanhrd),
+                         1),
+                  ## not on boundary logop = 0
+                  p0 + tanh(atanhrd))
+    cbind(p0,p1)
+}

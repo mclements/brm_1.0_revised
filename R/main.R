@@ -95,11 +95,11 @@
 #' v.2         = runif(n,-2,2) 
 #' v           = cbind(v.1,v.2)
 #' pscore.true = exp(v %*% gamma.true) / (1+exp(v %*% gamma.true))
-#' p0p1.true   = t(mapply(getProbScalarRR,v %*% alpha.true,v %*% beta.true)) 
-#' x           = mapply(rbinom,rep(1,n),rep(1,n),pscore.true)  
+#' p0p1.true   = getProbRR(v %*% alpha.true,v %*% beta.true)
+#' x           = rbinom(n, 1, pscore.true)  
 #' pA.true       = p0p1.true[,1]
 #' pA.true[x==1] = p0p1.true[x==1,2]
-#' y = mapply(rbinom,rep(1,n),rep(1,n),pA.true)
+#' y = rbinom(n, 1, pA.true)
 #' 
 #' fit.mle = brm(y,x,v,v,'RR','MLE',v,TRUE)
 #' fit.drw = brm(y,x,v,v,'RR','DR',v,TRUE)
@@ -111,7 +111,7 @@
 
 
 brm = function(y, x, va, vb = NULL, param, est.method = "MLE", vc = NULL, 
-    optimal = TRUE, weights = NULL, subset = NULL, max.step = 1000, thres = 1e-6, 
+    optimal = TRUE, weights = NULL, subset = NULL, max.step = 1000, thres = 1e-8, 
     alpha.start = NULL, beta.start = NULL, message = FALSE) {
     
     # default param = 'RR'; est.method = 'MLE'; va = v; vb = v; vc = v;

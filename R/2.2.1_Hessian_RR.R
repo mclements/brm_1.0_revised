@@ -3,7 +3,7 @@ Hessian2RR = function(y, x, va, vb, alpha.ml, beta.ml, weights) {
     # because under mis-specification of models Hessian no longer equals the
     # square of the first order derivatives
     
-    p0p1 = t(mapply(getProbScalarRR, va %*% alpha.ml, vb %*% beta.ml))
+    p0p1 = getProbRR(va %*% alpha.ml, vb %*% beta.ml)
     # p0p1 = cbind(p0, p1): n * 2 matrix
     p0 = p0p1[, 1]
     p1 = p0p1[, 2]

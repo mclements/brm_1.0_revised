@@ -4,7 +4,7 @@
 
 var.mle.rr = function(x, alpha.ml, beta.ml, va, vb, weights) {
     
-    p0p1 = t(mapply(getProbScalarRR, va %*% alpha.ml, vb %*% beta.ml))
+    p0p1 = getProbRR(va %*% alpha.ml, vb %*% beta.ml)
     n = dim(va)[1]
     pA = rep(NA, n)     # P(Y=1|A,V); here A = X
     pA[x == 0] = p0p1[x == 0, 1]
@@ -27,7 +27,7 @@ var.mle.rr = function(x, alpha.ml, beta.ml, va, vb, weights) {
 
 var.mle.rd = function(x, alpha.ml, beta.ml, va, vb, weights) {
     
-    p0p1 = t(mapply(getProbScalarRD, va %*% alpha.ml, vb %*% beta.ml))
+    p0p1 = getProbRD(va %*% alpha.ml, vb %*% beta.ml)
     # p0p1 = cbind(p0, p1): n * 2 matrix
     p0 = p0p1[, 1]
     p1 = p0p1[, 2]

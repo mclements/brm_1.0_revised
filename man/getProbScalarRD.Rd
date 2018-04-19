@@ -32,4 +32,3 @@ rownames(probs) = c("P(y=1|x=0)","P(y=1|x=1)")
 probs
 
 }
-

@@ -20,4 +20,3 @@ Unlike \code{glm}, which uses a single link function for the outcome, \code{brm}
 \references{
 Thomas S. Richardson, James M. Robins and Linbo Wang. "On Modeling and Estimation for the Relative Risk and Risk Difference." Journal of the American Statistical Association: Theory and Methods (2016+).
 }
-

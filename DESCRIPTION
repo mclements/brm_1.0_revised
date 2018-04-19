@@ -7,7 +7,7 @@ Author: Linbo Wang, Thomas Richardson
 Maintainer: Linbo Wang <linbowang@g.harvard.edu>
 Description: Fits novel models for the conditional relative risk, risk difference and odds ratio.
 License: MIT + file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 NeedsCompilation: no
 Suggests: knitr, rmarkdown
 Imports: stats

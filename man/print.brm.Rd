@@ -14,4 +14,3 @@
 \description{
 Ancillary function for printing
 }
-

@@ -59,3 +59,40 @@ getProbScalarRR = function(logrr, logop = NA) {
     }
     return(c(p0, p1))
 } 
+
+## Vectorised version
+getProbRR = function(logrr, logop = NA) {
+    if(is.matrix(logrr) && ncol(logrr) == 2){
+        logop = logrr[,2]
+        logrr = logrr[,1]
+    } else if(is.na(logop) && length(logrr) == 2){
+        logop = logrr[2]
+        logrr = logrr[1]
+    }
+    p0 <- ifelse((logop < (-12)) | (logop > 12) | (logrr < (-12)) | (logrr > 12),
+                 ## on the boundary South edge: large -ve logrr or (large -ve logop and -ve
+                 ## logrr)
+                 ifelse ((logrr < (-12)) | ((logop < (-12)) & (logrr < 0)),
+                         getPrbAux(logop-logrr),
+                         ifelse((logrr > 12) | ((logop < (-12)) & (logrr > 0)),
+                                ## West edge: large +ve logrr or (large -ve logop and +ve logrr)
+                                0,
+                                pmin(exp(-logrr), 1))),
+                 ## not on the boundary logop = 0; solving linear equations logop not 0;
+                 ## solving a quadratic equation
+          ifelse(same(logop, 0),
+                 1/(1 + exp(logrr)),
+                 (-(exp(logrr) + 1) * exp(logop) + sqrt(exp(2 * logop) * (exp(logrr) + 1)^2 + 4 * exp(logrr + logop) * (1 - exp(logop))))/(2 * exp(logrr) * (1 - exp(logop)))))
+    p1 <- ifelse((logop < (-12)) | (logop > 12) | (logrr < (-12)) | (logrr > 12),
+                 ## on the boundary South edge: large -ve logrr or (large -ve logop and -ve
+                 ## logrr
+                 ifelse ((logrr < (-12)) | ((logop < (-12)) & (logrr < 0)),
+                         0,
+                         ifelse((logrr > 12) | ((logop < (-12)) & (logrr > 0)),
+                                ## West edge: large +ve logrr or (large -ve logop and +ve logrr)
+                                getPrbAux(logop + logrr),
+                                pmin(exp(logrr), 1))),
+                 ## not on the boundary logop = 0
+                 exp(logrr) * p0)
+    cbind(p0,p1)
+} 

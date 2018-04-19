@@ -41,9 +41,9 @@ predict.brm = function(object, x.new = NULL, va.new = NULL, vb.new = NULL, ...) 
     
     linear.predictors = cbind(va.new %*% alpha.est, vb.new %*% beta.est)
     if(object$param=="RR") 
-        p0p1 = t(apply(linear.predictors, 1, getProbScalarRR))
+        p0p1 = getProbRR(linear.predictors)
     if(object$param=="RD") 
-        p0p1 = t(apply(linear.predictors, 1, getProbScalarRD))
+        p0p1 = getProbRD(linear.predictors)
     if(object$param=="OR"){
         p0 = expit(linear.predictors[,2])
         or = exp(linear.predictors[,1])
