@@ -137,8 +137,8 @@ brm = function(y, x, va, vb = NULL, param, est.method = "MLE", vc = NULL,
     
     data = cbind(y,x,va,vb,vc,weights)[subset,]
     subset = subset[rowSums(is.na(data)) == 0]
-    y = y[subset];  x = x[subset];  va = va[subset,];    vb = vb[subset,]
-    vc = vc[subset,];   weights = weights[subset]
+    y = y[subset];  x = x[subset];  va = va[subset,,drop=FALSE];    vb = vb[subset,,drop=FALSE]
+    vc = vc[subset,,drop=FALSE];   weights = weights[subset]
     
     pa = dim(va)[2]
     pb = dim(vb)[2]
