@@ -60,7 +60,26 @@ getProbScalarRR = function(logrr, logop = NA) {
     return(c(p0, p1))
 } 
 
-## Vectorised version
+#' Calculate risks from log RR and log OP (vectorised)
+#'
+#' @param logrr log of relative risk
+#' 
+#' @param logop log of odds product
+#'
+#' @details The \eqn{log OP} is defined as \eqn{log OP = log[(P(y=1|x=0)/P(y=0|x=0))*(P(y=1|x=1)/P(y=0|x=1))]}. 
+#' 
+#' @return a matrix \eqn{(P(y=1|x=0),P(y=1|x=1))} with two columns
+#' 
+#' @examples getProbRR(0,0)
+#' 
+#' set.seed(0)
+#' logrr = rnorm(10,0,1)
+#' logop = rnorm(10,0,1)
+#' probs = getProbRR(logrr, logop)
+#' colnames(probs) = c("P(y=1|x=0)","P(y=1|x=1)")
+#' probs
+#' 
+#' @export
 getProbRR = function(logrr, logop = NA) {
     if(is.matrix(logrr) && ncol(logrr) == 2){
         logop = logrr[,2]

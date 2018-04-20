@@ -52,7 +52,27 @@ getProbScalarRD = function(atanhrd, logop) {
     return(c(p0, p1))
 } 
 
-## vectorised version
+#' Calculate risks from arctanh RD and log OP (vectorised)
+#' 
+#' @param atanhrd arctanh of risk difference
+#' 
+#' @param logop log of odds product
+#' 
+#' @details The \eqn{log OP} is defined as \eqn{log OP = log[(P(y=1|x=0)/P(y=0|x=0))*(P(y=1|x=1)/P(y=0|x=1))]}. 
+#' The inverse hyperbolic tangent function \code{arctanh} is defined as \eqn{arctanh(z) = [log(1+z) - log(1-z)] / 2}. 
+#' 
+#' @return a matrix \eqn{(P(y=1|x=0),P(y=1|x=1))} with two columns
+#' 
+#' @examples getProbRD(0,0)
+#' 
+#' set.seed(0)
+#' logrr = rnorm(10,0,1)
+#' logop = rnorm(10,0,1)
+#' probs = getProbRD(logrr, logop)
+#' colnames(probs) = c("P(y=1|x=0)","P(y=1|x=1)")
+#' probs
+#' 
+#' @export
 getProbRD = function(atanhrd, logop) {
     if(is.matrix(atanhrd) && ncol(atanhrd) == 2){
         logop = atanhrd[,2]
