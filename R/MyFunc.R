@@ -64,18 +64,6 @@ WrapResults = function(point.est, cov, param, name, va, vb, converged) {
 ## Limits are 0 and 1 as x goes to -infty and +infty respectively 
 ## The function will never return NaN given a numerical input
 
-## getPrbAux = function(x) {
-##     if ((x < 17) && (x > (-500))) {
-##         return(0.5 * exp(x) * (-1 + (1 + 4 * exp(-x))^0.5))
-##     } else {
-##         if (x < 0) {
-##             return(0)
-##         } else {
-##             return(1)
-##         }
-##     }
-## } 
-
 getPrbAux = function(x) {
     ifelse((x < 17) & (x > (-500)),
            0.5 * exp(x) * (-1 + (1 + 4 * exp(-x))^0.5),
