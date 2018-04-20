@@ -22,7 +22,7 @@ dr.estimate.onestep = function(param, y, x, va, vb, alpha.start, beta, pscore,
         }
     }
 
-        opt <- optim(startpars, dr.objective, control=list(reltol=thres))
+        opt <- stats::optim(startpars, dr.objective, control=list(reltol=thres))
         opt$convergence = (opt$convergence == 0) # change cf. optim()
     
     return(opt)
